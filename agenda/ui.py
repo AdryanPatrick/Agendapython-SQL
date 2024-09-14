@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from .models import adicionar_compromisso, listar_compromissos
+from .models import adicionar_compromisso, listar_compromissos, apagar_compromisso
 
 def adicionar():
     data = entry_data.get()
@@ -23,9 +23,22 @@ def listar():
 
     if compromissos:
         for compromisso in compromissos:
-            tk.Label(janela_lista, text=f"ID: {compromisso[0]} | Data: {compromisso[1]} | Hora: {compromisso[2]} | Descrição: {compromisso[3]}").pack()
+            compromisso_str = f"ID: {compromisso[0]} | Data: {compromisso[1]} | Hora: {compromisso[2]} | Descrição: {compromisso[3]}"
+            label = tk.Label(janela_lista, text=compromisso_str)
+            label.pack()
+
+            # Botão para apagar o compromisso
+            botao_apagar = tk.Button(janela_lista, text="Apagar", command=lambda id=compromisso[0]: apagar(id, janela_lista))
+            botao_apagar.pack()
     else:
         tk.Label(janela_lista, text="Nenhum compromisso encontrado.").pack()
+
+def apagar(id_compromisso, janela_lista):
+    resposta = messagebox.askyesno("Confirmação", "Você tem certeza que deseja apagar este compromisso?")
+    if resposta:
+        apagar_compromisso(id_compromisso)
+        messagebox.showinfo("Sucesso", "Compromisso apagado com sucesso!")
+        janela_lista.destroy()  # Fecha a janela de listagem e atualiza a lista
 
 def criar_interface():
     root = tk.Tk()
